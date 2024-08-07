@@ -1,4 +1,5 @@
 using Final_Project_OCS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -18,6 +19,7 @@ namespace Final_Project_OCS.Controllers
             return View();
         }
 
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Privacy()
         {
             return View();
