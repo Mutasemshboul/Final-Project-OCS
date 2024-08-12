@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ChatMessage>
+
+@{
+    var currentUserId = ViewBag.CurrentUserId;
+}
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/Chat.css">
+
+    
+        
+            
+<div class="chat">
+    <div class="chat-header clearfix">
+        <div class="row">
+            <div class="col-lg-6">
+                <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                </a>
+                <div class="chat-about">
+                    <h6 class="m-b-0">Aiden Chavez</h6>
+                    <small>Last seen: 2 hours ago</small>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <div class="chat-history" id="chatHistory">
+        <ul class="m-b-0" id="messagesList">
+            @foreach (var message in Model)
+            {
+                <li class="clearfix">
+                    @if (message.SenderId == currentUserId)
+                    {
+                        <div class="message-data text-right">
+                            <span class="message-data-time">@message.Timestamp.ToShortTimeString()</span>
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar" class="rounded-circle">
+                        </div>
+                        <div class="message other-message float-right bg-primary text-white p-2 rounded">
+                            @message.Message
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-data">
+                            <span class="message-data-time">@message.Timestamp.ToShortTimeString()</span>
+                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" class="rounded-circle">
+                        </div>
+                        <div class="message my-message bg-light p-2 rounded">
+                            @message.Message
+                        </div>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="chat-message clearfix">
+        <div class="input-group mb-0">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-send"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Enter text here..." id="messageInput">
+            <button class="btn btn-primary">Send</button>
+        </div>
+    </div>
+</div>
+
+            
+

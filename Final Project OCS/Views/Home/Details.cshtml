@@ -1,0 +1,213 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var chatViewModel = ViewBag.ChatViewModel as ChatViewModel;
+
+}
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="container">
+            <div class="banner_content d-md-flex justify-content-between align-items-center">
+                <div class="mb-3 mb-md-0">
+                    <h2>Product Details</h2>
+                    <p>Very us move be blessed multiply night</p>
+                </div>
+                <div class="page_link">
+                    <a href="index.html">Home</a>
+                    <a href="single-product.html">Product Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="product_image_area">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <div class="s_product_img">
+                    <div id="carouselExampleIndicators"
+                         class="carousel slide"
+                         data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators"
+                                data-slide-to="0"
+                                class="active">
+                                <img src="~/Home/img/product/single-product/s-product-s-2.jpg"
+                                     alt="" />
+                            </li>
+                            <li data-target="#carouselExampleIndicators"
+                                data-slide-to="1">
+                                <img src="~/Home/img/product/single-product/s-product-s-3.jpg"
+                                     alt="" />
+                            </li>
+                            <li data-target="#carouselExampleIndicators"
+                                data-slide-to="2">
+                                <img src="~/Home/img/product/single-product/s-product-s-4.jpg"
+                                     alt="" />
+                            </li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="d-block w-100"
+                                     src="~/Home/img/product/single-product/s-product-1.jpg"
+                                     alt="First slide" />
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100"
+                                     src="~/Home/img/product/single-product/s-product-1.jpg"
+                                     alt="Second slide" />
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100"
+                                     src="~/Home/img/product/single-product/s-product-1.jpg"
+                                     alt="Third slide" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    @if (Model is Product)
+                    {
+                        <h3>@Model.User.Email</h3>
+                        <h3>@Model.Title</h3>
+                        <h2>$@Model.Price</h2>
+                    }
+                    else if (Model is ProductSwap)
+                    {
+                        <h3>@Model.Title</h3>
+                    }
+                    
+                    <ul class="list">
+                        <li>
+                            <a class="active" href="#">
+                                <span>Category</span> : Household
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"> <span>Availibility</span> : In Stock</a>
+                        </li>
+                    </ul>
+                    <p>
+                            @Model.Description
+                    </p>
+                   
+                    <div class="card_area">
+                        <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.User.Id')">Chat</a>
+                        <a class="icon_btn" href="#">
+                            <i class="lnr lnr lnr-diamond"></i>
+                        </a>
+                        <a class="icon_btn" href="#">
+                            <i class="lnr lnr lnr-heart"></i>
+                        </a>
+                    </div>
+                    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="chatModalBody">
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadChat(userId) {
+       
+    }
+
+    // Example usage: When you want to load the chat for a specific user
+    // Call this function and pass the userId of the user you want to chat with
+    // loadChat('someUserId');
+</script>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            displayMessage(user, message);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        function displayMessage(userId, message, senderId, senderAvatar, receiverAvatar) {
+            const ul = document.getElementById('messagesList');
+            const li = document.createElement('li');
+            li.classList.add('clearfix');
+
+            if (userId === senderId) {
+                // Message sent by the current user
+                li.innerHTML = `
+                    <div class="message-data text-right">
+
+                                    <span class="message-data-time">${new Date().toLocaleTimeString()}</span>
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar" class="rounded-circle">
+                        </div>
+                        <div class="message other-message float-right bg-primary text-white p-2 rounded">
+                                    ${message}
+                        </div>
+                `;
+            } else {
+                // Message received from another user
+                li.innerHTML = `
+                            <div class="message-data">
+                                            <span class="message-data-time">${new Date().toLocaleTimeString()}</span>
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" class="rounded-circle">
+                                </div>
+                                <div class="message my-message bg-light p-2 rounded">
+                ${message}
+                                </div>
+                `;
+            }
+
+            ul.appendChild(li);
+            ul.scrollTop = ul.scrollHeight; // Scroll to the bottom
+        }
+
+
+        function sendPrivateMessage(receiverUserId) {
+            const message = document.getElementById('messageInput').value;
+            connection.invoke("SendPrivateMessage", receiverUserId, message).catch(err => console.error(err.toString()));
+            displayMessage('Me', message);
+        }
+
+        function loadChat(userId) {
+
+            $.ajax({
+                url: '@Url.Action("GetChatWithUser", "Home")', // Replace with your controller name
+                type: 'GET',
+                data: { userId: userId },
+                success: function (result) {
+                    $('#chatModalBody').html(result); // Load the partial view into the modal body
+                    
+                    const sendButton = document.querySelector('.chat-message .btn-primary');
+                    sendButton.onclick = function () { sendPrivateMessage(userId); };
+                },
+                error: function () {
+                    alert('Failed to load chat messages.');
+                }
+            });
+            
+        }
+    </script>
+}

@@ -1,0 +1,288 @@
+﻿@inject UserManager<IdentityUser> UserManager
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/Admin/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="~/Admin/assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Admin/assets/libs/css/style.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/charts/chartist-bundle/chartist.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/charts/morris-bundle/morris.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/charts/c3charts/c3.css">
+    <link rel="stylesheet" href="~/Admin/assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
+    <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
+</head>
+
+<body>
+    <div class="dashboard-main-wrapper">
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="index.html">Concept</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+                        <li class="nav-item">
+                            <div id="custom-search" class="top-search-bar">
+                                <input class="form-control" type="text" placeholder="Search..">
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown notification">
+                            <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fab fa-facebook-messenger"></i> @* <span class="indicator"></span> *@</a>
+                            <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
+                                <ul class="notification-list">
+                                    @if (ViewBag.ChatUsers != null)
+                                    {
+                                        <div class="list-group">
+                                            @foreach (var user in ViewBag.ChatUsers)
+                                            {
+                                                <a href="#" onclick="loadChat('@user.Id')" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#chatModal">
+                                                    <div class="notification-info">
+                                                        <div class="notification-list-user-img">
+                                                            <img src="~/Admin/assets/images/avatar-2.jpg" alt="" class="user-avatar-md rounded-circle">
+                                                        </div>
+                                                        <div class="notification-list-user-block">
+                                                            <span class="notification-list-user-name">@user.UserName</span>
+                                                            <div class="notification-date">Chat now</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <li>No chats available.</li>
+                                    }
+                                </ul>
+
+                               
+                                <li>
+                                    <div class="list-footer"> <a href="#">View all notifications</a></div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown connection">
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-fw fa-th"></i> </a>
+                            <ul class="dropdown-menu dropdown-menu-right connection-dropdown">
+                                <li class="connection-list">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/github.png" alt=""> <span>Github</span></a>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/dribbble.png" alt=""> <span>Dribbble</span></a>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/dropbox.png" alt=""> <span>Dropbox</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/bitbucket.png" alt=""> <span>Bitbucket</span></a>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/mail_chimp.png" alt=""><span>Mail chimp</span></a>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+                                            <a href="#" class="connection-item"><img src="~/Admin/assets/images/slack.png" alt=""> <span>Slack</span></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="conntection-footer"><a href="#">More</a></div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="~/Admin/assets/images/avatar-1.jpg" alt="" class="user-avatar-md rounded-circle"></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="nav-user-info">
+                                    <h5 class="mb-0 text-white nav-user-name">@UserManager.GetUserName(User) </h5>
+                                    <span class="status"></span><span class="ml-2">Available</span>
+                                </div>
+                                <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>
+                                <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- Chat Modal -->
+        <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="chatModalBody">
+                        <!-- Chat messages will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+
+         <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <div class="nav-left-sidebar sidebar-dark">
+            <div class="menu-list">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-divider">
+                                Menu
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link active" asp-controller="Admin" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Dashboard <span class="badge badge-success">6</span></a>
+                             
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item ">
+                                    <a class="nav-link " asp-controller="Categories" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Categories <span class="badge badge-success">6</span></a>
+
+                                </li>
+                            }
+                           
+                            <li class="nav-item ">
+                                <a class="nav-link " asp-controller="Products" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Products <span class="badge badge-success">6</span></a>
+                               
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link " asp-controller="ProductSwaps" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Product Swap <span class="badge badge-success">6</span></a>
+
+                            </li>
+                           
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    @RenderBody()
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div>
+        
+    </div>
+    <script src="~/Admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <!-- bootstap bundle js -->
+    <script src="~/Admin/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- slimscroll js -->
+    <script src="~/Admin/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <!-- main js -->
+    <script src="~/Admin/assets/libs/js/main-js.js"></script>
+    <!-- chart chartist js -->
+    <script src="~/Admin/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
+    <!-- sparkline js -->
+    <script src="~/Admin/assets/vendor/charts/sparkline/jquery.sparkline.js"></script>
+    <!-- morris js -->
+    <script src="~/Admin/assets/vendor/charts/morris-bundle/raphael.min.js"></script>
+    <script src="~/Admin/assets/vendor/charts/morris-bundle/morris.js"></script>
+    <!-- chart c3 js -->
+    <script src="~/Admin/assets/vendor/charts/c3charts/c3.min.js"></script>
+    <script src="~/Admin/assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
+    <script src="~/Admin/assets/vendor/charts/c3charts/C3chartjs.js"></script>
+    <script src="~/Admin/assets/libs/js/dashboard-ecommerce.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            displayMessage(user, message);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        function displayMessage(userId, message, senderId, senderAvatar, receiverAvatar) {
+            const ul = document.getElementById('messagesList');
+            const li = document.createElement('li');
+            li.classList.add('clearfix');
+
+            if (userId === senderId) {
+                li.innerHTML = `
+                            <div class="message-data text-right">
+                                <span class="message-data-time">${new Date().toLocaleTimeString()}</span>
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar" class="rounded-circle">
+                            </div>
+                            <div class="message other-message float-right bg-primary text-white p-2 rounded">
+                                ${message}
+                            </div>
+                        `;
+            } else {
+                li.innerHTML = `
+                            <div class="message-data">
+                                <span class="message-data-time">${new Date().toLocaleTimeString()}</span>
+                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" class="rounded-circle">
+                            </div>
+                            <div class="message my-message bg-light p-2 rounded">
+                                ${message}
+                            </div>
+                        `;
+            }
+
+            ul.appendChild(li);
+            ul.scrollTop = ul.scrollHeight; // Scroll to the bottom
+        }
+
+        function sendPrivateMessage(receiverUserId) {
+            const message = document.getElementById('messageInput').value;
+            connection.invoke("SendPrivateMessage", receiverUserId, message).catch(err => console.error(err.toString()));
+            displayMessage('Me', message);
+        }
+
+        function loadChat(userId) {
+            $.ajax({
+                url: '@Url.Action("GetChatWithUser", "Home")', // Replace with your controller name
+                type: 'GET',
+                data: { userId: userId },
+                success: function (result) {
+                    $('#chatModalBody').html(result); // Load the partial view into the modal body
+                    const sendButton = document.querySelector('.chat-message .btn-primary');
+                    sendButton.onclick = function () { sendPrivateMessage(userId); };
+                },
+                error: function () {
+                    alert('Failed to load chat messages.');
+                }
+            });
+        }
+    </script>
+
+       
+    
+
+</body>
+
+</html>

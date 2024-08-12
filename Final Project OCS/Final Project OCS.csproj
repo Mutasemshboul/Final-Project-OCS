@@ -27,4 +27,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Home\img\.DS_Store" />
+    <None Include="wwwroot\Home\img\blog\.DS_Store" />
+    <None Include="wwwroot\Home\img\product\.DS_Store" />
+  </ItemGroup>
+
 </Project>

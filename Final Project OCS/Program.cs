@@ -1,12 +1,16 @@
+using Final_Project_OCS.Chat;
 using Final_Project_OCS.Data;
 using Final_Project_OCS.Models;
+using Final_Project_OCS.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
+builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -18,6 +22,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<ChatService, ChatService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -40,8 +45,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapHub<ChatHub>("/chathub");
+});
 
 app.Run();
