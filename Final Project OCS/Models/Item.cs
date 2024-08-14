@@ -20,5 +20,11 @@ namespace Final_Project_OCS.Models
         
         public string Status { get; set; } = "available"; // 'available', 'pending', 'sold'
         public bool IsDeleted { get; set; } = false;
+        public string Code { get; set; } = GenerateCode();
+
+        private static string GenerateCode()
+        {
+            return $"ITEM-{DateTime.UtcNow.Ticks}-{new Random().Next(1000, 9999)}";
+        }
     }
 }

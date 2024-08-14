@@ -4,6 +4,7 @@ using Final_Project_OCS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_Project_OCS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240813111850_AddCodeColumnToItemTable")]
+    partial class AddCodeColumnToItemTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace Final_Project_OCS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Final_Project_OCS.Models.ChatMessage", b =>
@@ -70,7 +73,7 @@ namespace Final_Project_OCS.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("ChatMessages", (string)null);
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("Final_Project_OCS.Models.ImageItem", b =>
@@ -92,7 +95,7 @@ namespace Final_Project_OCS.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("ImageItems", (string)null);
+                    b.ToTable("ImageItems");
                 });
 
             modelBuilder.Entity("Final_Project_OCS.Models.Item", b =>
@@ -171,7 +174,7 @@ namespace Final_Project_OCS.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("Subscriptions", (string)null);
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Final_Project_OCS.Models.SubscriptionType", b =>
@@ -201,7 +204,7 @@ namespace Final_Project_OCS.Migrations
 
                     b.HasKey("SubscriptionTypeId");
 
-                    b.ToTable("SubscriptionTypes", (string)null);
+                    b.ToTable("SubscriptionTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

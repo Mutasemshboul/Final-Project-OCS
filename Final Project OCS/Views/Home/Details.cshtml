@@ -1,10 +1,12 @@
 ﻿@model dynamic
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     
     var chatViewModel = ViewBag.ChatViewModel as ChatViewModel;
+    var userId = UserManager.GetUserId(User);
 
 }
 <section class="banner_area">
@@ -97,33 +99,42 @@
                     <p>
                             @Model.Description
                     </p>
-                   
-                    <div class="card_area">
-                        <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.User.Id')">Chat</a>
-                        <a class="icon_btn" href="#">
-                            <i class="lnr lnr lnr-diamond"></i>
-                        </a>
-                        <a class="icon_btn" href="#">
-                            <i class="lnr lnr lnr-heart"></i>
-                        </a>
-                    </div>
-                    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="chatModalLabel">Chat</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                    @if (Model.UserId != userId)
+                    {
+                        <div class="card_area">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Enter code" id="codeInput">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" onclick="checkCode()">Check Code</button>
                                 </div>
-                                <div class="modal-body" id="chatModalBody">
-                                    
+                            </div>
+                            <div id="codeFeedback" class="mt-2"></div>
+                            <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.User.Id')">Chat</a>
+                            <a class="icon_btn" href="#">
+                                <i class="lnr lnr lnr-diamond"></i>
+                            </a>
+                            <a class="icon_btn" href="#">
+                                <i class="lnr lnr lnr-heart"></i>
+                            </a>
+                        </div>
+                        <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="chatModalBody">
+                                    </div>
+
                                 </div>
-                                
                             </div>
                         </div>
-                    </div>
 
+                    }
+                  
 
                 </div>
             </div>
@@ -131,9 +142,44 @@
     </div>
 </div>
 <script>
-    function loadChat(userId) {
-       
+    function checkCode() {
+        var code = document.getElementById('codeInput').value;
+
+        $.ajax({
+            url: '@Url.Action("CheckCode", "Home")', // Replace with your controller and action
+            type: 'GET',
+            data: { 
+                code: code ,
+                code2: "@Model.Code",
+                productOwnerId: "@Model.UserId",
+                ProductId: "@Model.Id"
+            },
+            success: function (response) {
+                if (response.exists) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Code Validated',
+                        text: response.message
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Code Not Found',
+                        text: response.message
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while checking the code. Please try again.'
+                });
+            }
+        });
     }
+
+
 
     // Example usage: When you want to load the chat for a specific user
     // Call this function and pass the userId of the user you want to chat with

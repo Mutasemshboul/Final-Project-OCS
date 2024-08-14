@@ -9,24 +9,39 @@ using Final_Project_OCS.Data;
 using Final_Project_OCS.Models;
 using System.Security.Claims;
 using Final_Project_OCS.Service;
+using Microsoft.AspNetCore.Identity;
 
 namespace Final_Project_OCS.Controllers
 {
     public class ProductsController : BaseController
     {
-        private readonly ApplicationDbContext _context;
 
 
-        public ProductsController(ApplicationDbContext context , ChatService chatService ):base(chatService)
+        public ProductsController(ApplicationDbContext context , ChatService chatService, UserManager<IdentityUser> userManager) :base(chatService, context, userManager)
         {
-            _context = context;
+            
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.User).Where(u=>u.UserId==userId);
+            bool isAdmin = User.IsInRole("Admin");
+            IQueryable<Product> applicationDbContext;
+
+            if (isAdmin)
+            {
+                applicationDbContext = _context.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.User);
+            }
+            else
+            {
+                applicationDbContext = _context.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.User)
+                    .Where(u => u.UserId == userId);
+            }
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -65,8 +80,13 @@ namespace Final_Project_OCS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Price,Id,UserId,CategoryId,Title,Description,Status,IsDeleted")] Product product)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            product.UserId = userId;
+            bool isAdmin = User.IsInRole("Admin");
+            if (!isAdmin)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                product.UserId = userId;
+            }
+           
             if (ModelState.IsValid)
             {
                 _context.Add(product);
@@ -112,8 +132,12 @@ namespace Final_Project_OCS.Controllers
             {
                 try
                 {
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    product.UserId = userId;
+                    bool isAdmin = User.IsInRole("Admin");
+                    if (!isAdmin)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        product.UserId = userId;
+                    }
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }

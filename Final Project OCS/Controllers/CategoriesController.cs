@@ -8,16 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using Final_Project_OCS.Data;
 using Final_Project_OCS.Models;
 using Final_Project_OCS.Service;
+using Microsoft.AspNetCore.Identity;
 
 namespace Final_Project_OCS.Controllers
 {
     public class CategoriesController : BaseController
     {
-        private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context , ChatService chatService):base(chatService)
+        public CategoriesController(ApplicationDbContext context , ChatService chatService, UserManager<IdentityUser> userManager) :base(chatService, context, userManager)
         {
-            _context = context;
             
         }
 

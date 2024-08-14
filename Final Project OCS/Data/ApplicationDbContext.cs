@@ -19,6 +19,7 @@ namespace Final_Project_OCS.Data
         public DbSet<Subscription>   Subscriptions { get; set; }
         public DbSet<SubscriptionType>   SubscriptionTypes { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

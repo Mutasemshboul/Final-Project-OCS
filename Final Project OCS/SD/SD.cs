@@ -1,4 +1,4 @@
-﻿namespace Final_Project_OCS.Models
+﻿namespace Final_Project_OCS.SD
 {
     public class SD
     {
