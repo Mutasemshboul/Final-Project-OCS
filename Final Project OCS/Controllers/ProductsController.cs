@@ -77,26 +77,38 @@ namespace Final_Project_OCS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Price,Id,UserId,CategoryId,Title,Description,Status,IsDeleted")] Product product)
+        public async Task<IActionResult> Create( Product product)
         {
             bool isAdmin = User.IsInRole("Admin");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!isAdmin)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                
                 product.UserId = userId;
+                
             }
-           
+            
+
+            bool isRichMaxNumOfProduct = this.CheckNumberOfProduct();
+
+            if (isRichMaxNumOfProduct)
+            {
+                return Json(new { success = false, message = "You have reached the maximum number of products allowed by your subscription." });
+            }
+
             if (ModelState.IsValid)
             {
+                var user = await _context.ApplicationUsers.FindAsync(userId);
+                user.NumberOfAds += 1;
                 _context.Add(product);
+                _context.Users.Update(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Product created successfully." });
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", product.UserId);
-            return View(product);
+
+            return Json(new { success = false, message = "There was an error with your submission." });
         }
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)

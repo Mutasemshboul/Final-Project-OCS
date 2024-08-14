@@ -7,28 +7,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Final_Project_OCS.Data;
 using Final_Project_OCS.Models;
-using Final_Project_OCS.Service;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Final_Project_OCS.Controllers
 {
-    [Authorize(Roles = SD.SD.Role_Admin)]
-    public class CategoriesController : BaseController
+    [Authorize(Roles =SD.SD.Role_Admin)]
+    public class SubscriptionTypesController : Controller
     {
+        private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context , ChatService chatService, UserManager<IdentityUser> userManager) :base(chatService, context, userManager)
+        public SubscriptionTypesController(ApplicationDbContext context)
         {
-            
+            _context = context;
         }
 
-        // GET: Categories
+        // GET: SubscriptionTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.SubscriptionTypes.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+        // GET: SubscriptionTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,39 +35,39 @@ namespace Final_Project_OCS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            var subscriptionType = await _context.SubscriptionTypes
+                .FirstOrDefaultAsync(m => m.SubscriptionTypeId == id);
+            if (subscriptionType == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(subscriptionType);
         }
 
-        // GET: Categories/Create
+        // GET: SubscriptionTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: SubscriptionTypes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName,IsDeleted")] Category category)
+        public async Task<IActionResult> Create([Bind("SubscriptionTypeId,Name,Description,Price,NumberOfAdsAllowed,IsDeleted")] SubscriptionType subscriptionType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
+                _context.Add(subscriptionType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(subscriptionType);
         }
 
-        // GET: Categories/Edit/5
+        // GET: SubscriptionTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,22 +75,22 @@ namespace Final_Project_OCS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var subscriptionType = await _context.SubscriptionTypes.FindAsync(id);
+            if (subscriptionType == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(subscriptionType);
         }
 
-        // POST: Categories/Edit/5
+        // POST: SubscriptionTypes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryName,IsDeleted")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("SubscriptionTypeId,Name,Description,Price,NumberOfAdsAllowed,IsDeleted")] SubscriptionType subscriptionType)
         {
-            if (id != category.Id)
+            if (id != subscriptionType.SubscriptionTypeId)
             {
                 return NotFound();
             }
@@ -100,12 +99,12 @@ namespace Final_Project_OCS.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(subscriptionType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!SubscriptionTypeExists(subscriptionType.SubscriptionTypeId))
                     {
                         return NotFound();
                     }
@@ -116,10 +115,10 @@ namespace Final_Project_OCS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(subscriptionType);
         }
 
-        // GET: Categories/Delete/5
+        // GET: SubscriptionTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,34 +126,34 @@ namespace Final_Project_OCS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            var subscriptionType = await _context.SubscriptionTypes
+                .FirstOrDefaultAsync(m => m.SubscriptionTypeId == id);
+            if (subscriptionType == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(subscriptionType);
         }
 
-        // POST: Categories/Delete/5
+        // POST: SubscriptionTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
+            var subscriptionType = await _context.SubscriptionTypes.FindAsync(id);
+            if (subscriptionType != null)
             {
-                _context.Categories.Remove(category);
+                _context.SubscriptionTypes.Remove(subscriptionType);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool SubscriptionTypeExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.SubscriptionTypes.Any(e => e.SubscriptionTypeId == id);
         }
     }
 }

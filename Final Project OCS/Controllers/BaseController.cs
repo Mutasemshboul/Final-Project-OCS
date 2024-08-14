@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Final_Project_OCS.Controllers
@@ -34,6 +35,29 @@ namespace Final_Project_OCS.Controllers
             await next();
         }
 
-       
+        public bool CheckNumberOfProduct()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return false;
+            }
+
+            var user = _context.ApplicationUsers
+                .FirstOrDefault(u => u.Id == userId && !u.IsDeleted);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            
+
+            return user.NumberOfAds >= user.NumberOfAdsAllowed;
+        }
+
+
+
+
     }
 }

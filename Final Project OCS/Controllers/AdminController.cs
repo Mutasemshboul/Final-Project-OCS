@@ -22,6 +22,12 @@ namespace Final_Project_OCS.Controllers
              
             return View(); 
         }
-        
+
+        public IActionResult Packages()
+        {
+            return View();
+        }
+
+
     }
 }

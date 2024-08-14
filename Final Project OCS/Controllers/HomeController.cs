@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Final_Project_OCS.Controllers
 {
@@ -181,6 +182,45 @@ namespace Final_Project_OCS.Controllers
 
 
         }
+
+        public async Task<IActionResult> Subscriptions()
+        {
+            return View(await _context.SubscriptionTypes.ToListAsync());
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddSubscription(int subscriptionTypeId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var subscriptionType = await _context.SubscriptionTypes.FindAsync(subscriptionTypeId);
+            if (subscriptionType == null)
+            {
+                return Json(new { success = false, message = "Invalid subscription type." });
+            }
+
+            var newSubscription = new Subscription
+            {
+                UserId = userId,
+                SubscriptionTypeId = subscriptionTypeId,
+                
+            };
+
+            _context.Subscriptions.Add(newSubscription);
+
+            // Update the user's NumberOfAdsAllowed
+            var user = await _context.ApplicationUsers.FindAsync(userId);
+            if (user != null)
+            {
+                // Accumulate the NumberOfAdsAllowed
+                user.NumberOfAdsAllowed += subscriptionType.NumberOfAdsAllowed;
+                _context.Users.Update(user);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Subscription added successfully. Your ad limit has been updated." });
+        }
+
 
     }
 }

@@ -12,5 +12,7 @@ namespace Final_Project_OCS.Models
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
         public int Points { get; set; } = 0;
         public bool IsDeleted { get; set; } = false;
+        public int NumberOfAdsAllowed { get; set; } = 0;
+        public int NumberOfAds { get; set; } = 0;
     }
 }

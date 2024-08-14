@@ -1,0 +1,103 @@
+﻿@model IEnumerable<SubscriptionType>
+
+@{
+    ViewData["Title"] = "Subscriptions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Admin/assets/vendor/bootstrap/css/bootstrap.min.css">
+<link href="~/Admin/assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+<link rel="stylesheet" href="~/Admin/assets/libs/css/style.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/charts/chartist-bundle/chartist.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/charts/morris-bundle/morris.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/charts/c3charts/c3.css">
+<link rel="stylesheet" href="~/Admin/assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
+<style>
+    body {
+        background-color: #fff
+    }
+</style>
+<div class="container bg-white">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="section-block">
+                <h2 class="section-title"> Packages</h2>
+            </div>
+        </div>
+        @foreach (var item in Model)
+        {
+             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-center p-3 ">
+                    <h4 class="mb-0 text-white"> @item.Name</h4>
+                </div>
+                <div class="card-body text-center">
+                        <h1 class="mb-1">$@item.Price</h1>
+                    <p>Per Month Plateform</p>
+                </div>
+                <div class="card-body border-top">
+                    <p>
+                        @item.Description
+                    </p>
+                    @* <ul class="list-unstyled bullet-check font-14">
+                        <li>Facebook, Instagram, Pinterest,Snapchat.</li>
+                        <li>Guaranteed follower growth for increas brand awareness.</li>
+                        <li>Daily updates on choose platforms</li>
+                        <li>Stronger customer service through daily interaction</li>
+                        <li>Monthly progress report</li>
+                        <li>1 Million Followers</li>
+                    </ul> *@
+                        <a href="#" class="btn btn-outline-secondary btn-block btn-lg" onclick="addSubscription(@item.SubscriptionTypeId)">Get Started</a>
+                    </div>
+            </div>
+        </div>
+        }
+       
+     
+
+    </div>
+</div>
+
+<script>
+    function addSubscription(subscriptionTypeId) {
+        $.ajax({
+            url: '@Url.Action("AddSubscription", "Home")', // Replace with your actual controller
+            type: 'POST',
+            data: {
+                subscriptionTypeId: subscriptionTypeId           
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(function () {
+                        // Optionally, reload the page or redirect to another page
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while processing your request.'
+                });
+            }
+        });
+    }
+
+</script>
+
+
+
+

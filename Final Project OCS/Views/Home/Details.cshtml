@@ -127,6 +127,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body" id="chatModalBody">
+
                                     </div>
 
                                 </div>
@@ -181,9 +182,7 @@
 
 
 
-    // Example usage: When you want to load the chat for a specific user
-    // Call this function and pass the userId of the user you want to chat with
-    // loadChat('someUserId');
+   
 </script>
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
@@ -202,7 +201,7 @@
             li.classList.add('clearfix');
 
             if (userId === senderId) {
-                // Message sent by the current user
+                
                 li.innerHTML = `
                     <div class="message-data text-right">
 
@@ -214,7 +213,7 @@
                         </div>
                 `;
             } else {
-                // Message received from another user
+                
                 li.innerHTML = `
                             <div class="message-data">
                                             <span class="message-data-time">${new Date().toLocaleTimeString()}</span>
@@ -227,7 +226,7 @@
             }
 
             ul.appendChild(li);
-            ul.scrollTop = ul.scrollHeight; // Scroll to the bottom
+            ul.scrollTop = ul.scrollHeight; 
         }
 
 
@@ -240,11 +239,11 @@
         function loadChat(userId) {
 
             $.ajax({
-                url: '@Url.Action("GetChatWithUser", "Home")', // Replace with your controller name
+                url: '@Url.Action("GetChatWithUser", "Home")', 
                 type: 'GET',
                 data: { userId: userId },
                 success: function (result) {
-                    $('#chatModalBody').html(result); // Load the partial view into the modal body
+                    $('#chatModalBody').html(result); 
                     
                     const sendButton = document.querySelector('.chat-message .btn-primary');
                     sendButton.onclick = function () { sendPrivateMessage(userId); };
