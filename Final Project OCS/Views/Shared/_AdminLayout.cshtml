@@ -1,5 +1,6 @@
 ﻿@inject UserManager<IdentityUser> UserManager
 
+
 <!doctype html>
 <html lang="en">
 
@@ -180,6 +181,21 @@
                                 <a class="nav-link " asp-controller="ProductSwaps" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-fw fa-user-circle"></i>Product Swap <span class="badge badge-success">6</span></a>
 
                             </li>
+                            
+                            @if (ViewBag.HasStore == true)
+                            {
+                                <li class="nav-item ">
+                                    <a class="nav-link " asp-controller="StoreCategories" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1">
+                                        <i class="fa fa-fw fa-user-circle"></i>Store Categories <span class="badge badge-success">6</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link " asp-controller="StoreProducts" asp-action="Index" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1">
+                                        <i class="fa fa-fw fa-user-circle"></i>Store Products  <span class="badge badge-success">6</span>
+                                    </a>
+                                </li>
+                            }
+
                             
                            
                         </ul>

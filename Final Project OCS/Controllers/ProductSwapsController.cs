@@ -109,6 +109,19 @@ namespace Final_Project_OCS.Controllers
             {
                 return NotFound();
             }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var userProducs = await _context.ProductSwaps.FirstOrDefaultAsync(s => s.UserId == userId && s.Id == id);
+
+            if (userProducs == null || id != userProducs.Id)
+            {
+                return Unauthorized("You do not have access to edit this product.");
+            }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", productSwap.CategoryId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", productSwap.UserId);
             return View(productSwap);

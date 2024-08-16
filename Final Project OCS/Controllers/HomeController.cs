@@ -221,6 +221,26 @@ namespace Final_Project_OCS.Controllers
             return Json(new { success = true, message = "Subscription added successfully. Your ad limit has been updated." });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterStore(Store store)
+        {
+            if (ModelState.IsValid)
+            {
+                store.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _context.ApplicationUsers
+                .FirstOrDefault(u => u.Id == store.UserId && !u.IsDeleted);
+                user.HasStore = true;
+                _context.ApplicationUsers.Update(user);
+                _context.Stores.Add(store);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Store registered successfully." });
+            }
+
+            return Json(new { success = false, message = "There was an error registering the store. Please try again." });
+        }
+
+
 
     }
 }

@@ -118,6 +118,20 @@ namespace Final_Project_OCS.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var userProducs = await _context.Products.FirstOrDefaultAsync(s => s.UserId == userId && s.Id == id);
+
+            if (userProducs == null || id != userProducs.Id)
+            {
+                return Unauthorized("You do not have access to edit this product.");
+            }
+
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {

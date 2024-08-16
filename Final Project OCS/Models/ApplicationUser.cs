@@ -14,5 +14,6 @@ namespace Final_Project_OCS.Models
         public bool IsDeleted { get; set; } = false;
         public int NumberOfAdsAllowed { get; set; } = 0;
         public int NumberOfAds { get; set; } = 0;
+        public bool HasStore { get; set; }
     }
 }

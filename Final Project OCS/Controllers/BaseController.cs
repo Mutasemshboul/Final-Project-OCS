@@ -31,6 +31,16 @@ namespace Final_Project_OCS.Controllers
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             ViewBag.ChatUsers = await _chatService.GetChatUsersAsync(User);
+            var userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewBag.HasStore = _context.Stores.Any(s => s.UserId == userId);
+            }
+            else
+            {
+                ViewBag.HasStore = false;
+            }
+            base.OnActionExecuting(context);
 
             await next();
         }

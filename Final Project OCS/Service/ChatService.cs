@@ -1,4 +1,5 @@
 ﻿using Final_Project_OCS.Data;
+using Final_Project_OCS.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

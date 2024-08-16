@@ -49,21 +49,63 @@
                         <li>Monthly progress report</li>
                         <li>1 Million Followers</li>
                     </ul> *@
-                        <a href="#" class="btn btn-outline-secondary btn-block btn-lg" onclick="addSubscription(@item.SubscriptionTypeId)">Get Started</a>
+                        @if(item.SubscriptionTypeId == 3)
+                        {
+                            <a href="#" class="btn btn-outline-secondary btn-block btn-lg" data-toggle="modal" data-target="#storeRegistrationModal">Get Started</a>
+
+                        }
+                        else
+                        {
+                            <a href="#" class="btn btn-outline-secondary btn-block btn-lg" onclick="addSubscription(@item.SubscriptionTypeId)">Get Started</a>
+
+                        }
                     </div>
             </div>
         </div>
         }
+        <!-- Modal Structure -->
+        <div class="modal fade" id="storeRegistrationModal" tabindex="-1" role="dialog" aria-labelledby="storeRegistrationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="storeRegistrationModalLabel">Register Your Store</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="storeRegistrationForm">
+                            @Html.AntiForgeryToken() <!-- Include Anti-Forgery Token -->
+                            <div class="form-group">
+                                <label for="storeName">Store Name</label>
+                                <input type="text" class="form-control" id="storeName" name="Name" placeholder="Enter store name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="storeDescription">Description</label>
+                                <textarea class="form-control" id="storeDescription" name="Description" rows="3" placeholder="Enter store description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="storeImage">Image URL</label>
+                                <input type="text" class="form-control" id="storeImage" name="ImageUrl" placeholder="Enter image URL" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register Store</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
        
      
 
     </div>
 </div>
 
+@section Scripts {
 <script>
     function addSubscription(subscriptionTypeId) {
         $.ajax({
-            url: '@Url.Action("AddSubscription", "Home")', // Replace with your actual controller
+            url: '@Url.Action("AddSubscription", "Home")', 
             type: 'POST',
             data: {
                 subscriptionTypeId: subscriptionTypeId           
@@ -75,7 +117,6 @@
                         title: 'Success',
                         text: response.message
                     }).then(function () {
-                        // Optionally, reload the page or redirect to another page
                         location.reload();
                     });
                 } else {
@@ -96,8 +137,50 @@
         });
     }
 
-</script>
 
+    $(document).ready(function () {
+        $('#storeRegistrationForm').on('submit', function (e) {
+            e.preventDefault(); 
+
+            
+            var formData = $(this).serialize();
+
+            
+            $.ajax({
+                url: '@Url.Action("RegisterStore", "Home")', 
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message
+                        }).then(function () {
+                            $('#storeRegistrationModal').modal('hide'); 
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while processing your request.'
+                    });
+                }
+            });
+        });
+    });
+
+
+</script>
+}
 
 
 

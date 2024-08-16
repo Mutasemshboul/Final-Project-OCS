@@ -24,6 +24,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<ChatService, ChatService>();
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
