@@ -158,18 +158,15 @@ namespace Final_Project_OCS.Controllers
 
         public bool SearchCodeInChat(string code, string ownerId)
         {
-            var currentUserId = _userManager.GetUserId(User); // Get the logged-in user's ID
+            var currentUserId = _userManager.GetUserId(User); 
 
-            // Trim the code to remove any extra spaces
             code = code?.Trim();
 
-            // Search for the code in chat messages between the logged-in user and the product owner
             var exists = _context.ChatMessages
                 .Where(m => (m.SenderId == currentUserId && m.ReceiverId == ownerId) ||
                             (m.SenderId == ownerId && m.ReceiverId == currentUserId))
                 .Any(m => m.Message.Contains(code));
 
-            // Return the result as JSON
             return exists;
         }
 
@@ -207,11 +204,9 @@ namespace Final_Project_OCS.Controllers
 
             _context.Subscriptions.Add(newSubscription);
 
-            // Update the user's NumberOfAdsAllowed
             var user = await _context.ApplicationUsers.FindAsync(userId);
             if (user != null)
             {
-                // Accumulate the NumberOfAdsAllowed
                 user.NumberOfAdsAllowed += subscriptionType.NumberOfAdsAllowed;
                 _context.Users.Update(user);
             }
@@ -238,6 +233,34 @@ namespace Final_Project_OCS.Controllers
             }
 
             return Json(new { success = false, message = "There was an error registering the store. Please try again." });
+        }
+       
+        public IActionResult Products(int categoryId)
+        {
+            ViewBag.Categories = _context.Categories.ToList();
+            IEnumerable<Product> products;
+
+            if ( categoryId > 0)
+            {
+                // If a category is specified, get products from that category
+                products = _context.Products
+                    .Include(p => p.Category)
+                    .Where(p => p.CategoryId == categoryId)
+                    .ToList();
+            }
+            else
+            {
+                // If no category is specified, get all products
+                products = _context.Products
+                    .Include(p => p.Category)
+                    .ToList();
+            }
+
+           
+                PartialView("_ProductPartial", products);
+            
+            return View();
+            
         }
 
 
