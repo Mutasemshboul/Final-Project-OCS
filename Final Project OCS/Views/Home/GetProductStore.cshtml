@@ -1,7 +1,7 @@
-﻿@model IEnumerable<dynamic>
+﻿@model IEnumerable<StoreProduct>
 
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "GetProductStore";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -27,7 +27,7 @@
                 </div>
 
                 <div id="productContainer">
-                     @Html.Partial("_ProductPartial", Model) 
+                     @Html.Partial("_GetProductStore", Model)
                 </div> 
             </div>
 
@@ -42,19 +42,12 @@
                                 @foreach (var category in ViewBag.Categories)
                                 {
                                     <li>
-                                        @if (ViewBag.IsSwap)
-                                        {
-                                            <a href="#" onclick="loadProducts('@category.Id',true)">
-                                                @category.CategoryName
+                                       
+                                            <a href="#">
+                                            @category.Name
                                             </a>
                                            
-                                        }
-                                        else
-                                        {
-                                            <a href="#" onclick="loadProducts('@category.Id',false)">
-                                                @category.CategoryName
-                                            </a>
-                                        }
+                                        
 
                                     </li>
                                 }
@@ -155,3 +148,4 @@
             
 
 }
+

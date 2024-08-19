@@ -23,6 +23,7 @@ namespace Final_Project_OCS.Data
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreCategory> StoreCategories { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
+        public DbSet<ContactUs>  ContactUs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

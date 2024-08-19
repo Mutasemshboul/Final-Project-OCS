@@ -1,5 +1,4 @@
-﻿@model IEnumerable<dynamic>
-
+﻿@model IEnumerable<StoreProduct>
 
 <div class="latest_product_inner">
     <div class="row">
@@ -12,19 +11,12 @@
                              src="img/product/inspired-product/i1.jpg"
                              alt="" />
                         <div class="p_icon">
-                            @if (item is Product)
-                            {
-                                <a asp-action="Details" asp-route-id="@item.Id" asp-route-isSwap="false">
-                                    <i class="ti-eye"></i>
-                                </a>
-                            }
-                            else
-                            {
-                                <a asp-action="Details" asp-route-id="@item.Id" asp-route-isSwap="true">
-                                    <i class="ti-eye"></i>
-                                </a>
-                            }
 
+                            <a asp-action="Details" asp-route-id="@item.Id" asp-route-isProductStore="true">
+                                    <i class="ti-eye"></i>
+                                </a>
+                            
+                           
                             <a href="#">
                                 <i class="ti-heart"></i>
                             </a>
@@ -37,12 +29,11 @@
                         <a href="#" class="d-block">
                             <h4>@item.Title</h4>
                         </a>
-                        @if (item is Product)
-                        {
+                      
                             <div class="mt-3">
                                 <span class="mr-4">$@item.Price</span>
                             </div>
-                        }
+                        
 
                     </div>
                 </div>
@@ -51,8 +42,3 @@
 
     </div>
 </div>
-
-
-
-
-

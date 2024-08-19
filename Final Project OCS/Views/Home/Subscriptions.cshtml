@@ -49,9 +49,20 @@
                         <li>Monthly progress report</li>
                         <li>1 Million Followers</li>
                     </ul> *@
-                        @if(item.SubscriptionTypeId == 3)
+                        @if (item.SubscriptionTypeId == 3 )
                         {
-                            <a href="#" class="btn btn-outline-secondary btn-block btn-lg" data-toggle="modal" data-target="#storeRegistrationModal">Get Started</a>
+                            if (ViewBag.HasStore)
+                            {
+                                <div class="card-header bg-success text-center p-3 ">
+                                    <h4 class="mb-0 text-white"> You Already Have A Store</h4>
+                                </div>
+                       
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-outline-secondary btn-block btn-lg" data-toggle="modal" data-target="#storeRegistrationModal">Get Started</a>
+
+                            }
 
                         }
                         else

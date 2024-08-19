@@ -88,34 +88,17 @@
                                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Home" asp-action="Products">Products</a>
-                                    </li>
-                                    <li class="nav-item submenu dropdown">
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                           aria-expanded="false">Blog</a>
-                                        <ul class="dropdown-menu">
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="blog.html">Blog</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="single-blog.html">Blog Details</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="nav-item submenu dropdown">
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                           aria-expanded="false">Pages</a>
-                                        <ul class="dropdown-menu">
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="tracking.html">Tracking</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="elements.html">Elements</a>
-                                            </li>
-                                        </ul>
+                                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-isSwap="false">Products</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="contact.html">Contact</a>
+                                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-isSwap="true">Swap</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Home" asp-action="Stores" >Stores</a>
+                                    </li>
+                                   
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Home" asp-action="ContactUs">Contact</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Home" asp-action="Subscriptions">Packages</a>

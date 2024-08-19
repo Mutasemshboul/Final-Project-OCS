@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Final_Project_OCS.Controllers
 {
-    [Authorize]
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -42,7 +42,7 @@ namespace Final_Project_OCS.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         [Authorize]
-        public async Task<IActionResult> Details(int? id, bool isSwap = false)
+        public async Task<IActionResult> Details(int? id, bool isSwap = false,bool isProductStore = false)
         {
 
 
@@ -52,7 +52,18 @@ namespace Final_Project_OCS.Controllers
             {
                 return NotFound();
             }
+            if (isProductStore)
+            {
+                var product = await _context.StoreProducts
+                   .Include(p => p.Store)
+                   .FirstOrDefaultAsync(m => m.Id == id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
 
+                return View("Details", product);
+            }
             if (isSwap)
             {
                 var productSwap = await _context.ProductSwaps
@@ -123,7 +134,7 @@ namespace Final_Project_OCS.Controllers
             return PartialView("_ChatMessage", messages);
         }
         [HttpGet]
-        public JsonResult CheckCode(string code, string code2, string productOwnerId, int ProductId)
+        public JsonResult CheckCode(string code, string code2, string productOwnerId, int ProductId,string productType)
         {
             bool exists;
             string message;
@@ -138,7 +149,7 @@ namespace Final_Project_OCS.Controllers
                 {
                     exists = true;
                     message = "Code found in chat and it matches the provided code!";
-                    MarkAsSold(ProductId);
+                    MarkAsSold(ProductId, productType);
                 }
                 else
                 {
@@ -170,21 +181,79 @@ namespace Final_Project_OCS.Controllers
             return exists;
         }
 
-        public void MarkAsSold(int productId)
+        public void MarkAsSold(int productId , string productType)
         {
-            var product = _context.Products.Find(productId);
+            if(productType == "product")
+            {
+                var product = _context.Products.Find(productId);
+                var seller = _context.ApplicationUsers.Find(product.UserId);
+                if (seller != null)
+                {
+                    seller.Points += 10;
+                }
 
-            product.Status = "Sold";
-            _context.SaveChangesAsync();
+                var buyerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var buyer = _context.ApplicationUsers.Find(buyerId);
+                if (buyer != null)
+                {
+                    buyer.Points += 10;
+                }
+
+                product.Status = "Sold";
+            }
+            else if (productType == "swap")
+            {
+                var product = _context.ProductSwaps.Find(productId);
+                var seller = _context.ApplicationUsers.Find(product.UserId);
+                if (seller != null)
+                {
+                    seller.Points += 10;
+                }
+
+                var buyerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var buyer = _context.ApplicationUsers.Find(buyerId);
+                if (buyer != null)
+                {
+                    buyer.Points += 10;
+                }
+
+                product.Status = "Sold";
+            }
+            else if (productType == "store")
+            {
+                var product =  _context.StoreProducts
+                    .Include(p => p.Store)
+                    .FirstOrDefault(p => p.Id == productId);
+                var seller = _context.ApplicationUsers.Find(product.Store.UserId);
+                if (seller != null)
+                {
+                    seller.Points += 10;
+                }
+
+                var buyerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var buyer = _context.ApplicationUsers.Find(buyerId);
+                if (buyer != null)
+                {
+                    buyer.Points += 10;
+                }
+
+                product.Status = "Sold";
+            }
+            
+
+             _context.SaveChangesAsync();
 
 
         }
 
         public async Task<IActionResult> Subscriptions()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.HasStore = _context.Stores.Any(s => s.UserId == userId);
             return View(await _context.SubscriptionTypes.ToListAsync());
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddSubscription(int subscriptionTypeId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -218,6 +287,7 @@ namespace Final_Project_OCS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> RegisterStore(Store store)
         {
             if (ModelState.IsValid)
@@ -235,32 +305,97 @@ namespace Final_Project_OCS.Controllers
             return Json(new { success = false, message = "There was an error registering the store. Please try again." });
         }
        
-        public IActionResult Products(int categoryId)
+        public IActionResult Products( bool isSwap)
         {
             ViewBag.Categories = _context.Categories.ToList();
-            IEnumerable<Product> products;
+            ViewBag.IsSwap = isSwap;
 
-            if ( categoryId > 0)
+            if (isSwap)
             {
-                // If a category is specified, get products from that category
-                products = _context.Products
+                var products = _context.ProductSwaps
                     .Include(p => p.Category)
-                    .Where(p => p.CategoryId == categoryId)
+                    .Where(p=>p.Status == "Active")
                     .ToList();
+                return View(products);
             }
             else
             {
-                // If no category is specified, get all products
-                products = _context.Products
+                var products = _context.Products
                     .Include(p => p.Category)
+                    .Where(p => p.Status == "Active")
                     .ToList();
+                return View(products);
+            }
+  
+            
+            
+        }
+
+        public IActionResult GetProductPartialView(int categoryId, bool isSwap)
+        {
+            ViewBag.IsSwap = isSwap;
+
+            if (isSwap)
+            {
+                var products = _context.ProductSwaps
+                           .Include(p => p.Category)
+                           .Where(p => p.CategoryId == categoryId && p.Status == "Active")
+                           .ToList();
+                return PartialView("_ProductPartial", products);
+            }
+            else
+            {
+                var products = _context.Products
+                           .Include(p => p.Category)
+                           .Where(p => p.CategoryId == categoryId && p.Status == "Active")
+                           .ToList();
+                return PartialView("_ProductPartial", products);
+            }
+  
+        }
+
+        public async Task<IActionResult> Stores()
+        {
+            return View(await _context.Stores.ToListAsync());
+        }
+
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> CreateContactUs([Bind("Id,Name,Email,Subject,Body")] ContactUs contactUs)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(contactUs);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(contactUs);
+        }
+
+        public async Task<IActionResult> GetProductStore(int storeId)
+        {
+            
+            var store = await _context.Stores.FindAsync(storeId);
+            if (store == null)
+            {
+                return NotFound("Store not found");
             }
 
+            var products = await _context.StoreProducts
+                .Where(p => p.StoreId == storeId && p.Status=="Active")
+                .Include(p => p.Category) 
+                .ToListAsync();
+            var categories = products.Select(p => p.Category).Distinct().ToList();
+
            
-                PartialView("_ProductPartial", products);
-            
-            return View();
-            
+            ViewBag.Categories = categories;
+
+
+            return View(products);
+      
         }
 
 

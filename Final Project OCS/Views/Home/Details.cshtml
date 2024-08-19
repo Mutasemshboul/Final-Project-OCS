@@ -83,9 +83,16 @@
                     }
                     else if (Model is ProductSwap)
                     {
+                        <h3>@Model.User.Email</h3>
                         <h3>@Model.Title</h3>
                     }
-                    
+                    else if (Model is StoreProduct)
+                    {
+                        <h3>@Model.Store.User.Email</h3>
+                        <h3>@Model.Title</h3>
+                        <h2>$@Model.Price</h2>
+                    }
+
                     <ul class="list">
                         <li>
                             <a class="active" href="#">
@@ -99,42 +106,83 @@
                     <p>
                             @Model.Description
                     </p>
-                    @if (Model.UserId != userId)
+                    @if(Model is StoreProduct)
                     {
-                        <div class="card_area">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Enter code" id="codeInput">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button" onclick="checkCode()">Check Code</button>
+                        @if (Model.Store.UserId != userId)
+                        {
+                            <div class="card_area">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Enter code" id="codeInput">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" onclick="checkCode()">Check Code</button>
+                                    </div>
+                                </div>
+                                <div id="codeFeedback" class="mt-2"></div>
+                                <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.Store.UserId')">Chat</a>
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr lnr-diamond"></i>
+                                </a>
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr lnr-heart"></i>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id="chatModalBody">
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
-                            <div id="codeFeedback" class="mt-2"></div>
-                            <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.User.Id')">Chat</a>
-                            <a class="icon_btn" href="#">
-                                <i class="lnr lnr lnr-diamond"></i>
-                            </a>
-                            <a class="icon_btn" href="#">
-                                <i class="lnr lnr lnr-heart"></i>
-                            </a>
-                        </div>
-                        <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="chatModalLabel">Chat</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body" id="chatModalBody">
 
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
+                        }
                     }
+                    else
+                    {
+                        @if (Model.UserId != userId)
+                        {
+                            <div class="card_area">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Enter code" id="codeInput">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" onclick="checkCode()">Check Code</button>
+                                    </div>
+                                </div>
+                                <div id="codeFeedback" class="mt-2"></div>
+                                <a class="main_btn" href="#" data-toggle="modal" data-target="#chatModal" onclick="loadChat('@Model.User.Id')">Chat</a>
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr lnr-diamond"></i>
+                                </a>
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr lnr-heart"></i>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id="chatModalBody">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                   
                   
 
                 </div>
@@ -149,11 +197,35 @@
         $.ajax({
             url: '@Url.Action("CheckCode", "Home")', // Replace with your controller and action
             type: 'GET',
-            data: { 
-                code: code ,
-                code2: "@Model.Code",
-                productOwnerId: "@Model.UserId",
-                ProductId: "@Model.Id"
+            data: {
+                code: code,
+    @if (Model is Product)
+    {
+        <text>
+                code2: "@((Model as Product).Code)",
+                productOwnerId: "@((Model as Product).UserId)",
+                ProductId: @((Model as Product).Id),
+                productType:"product"
+        </text>
+    }
+    else if (Model is ProductSwap)
+    {
+        <text>
+                code2: "@((Model as ProductSwap).Code)",
+                productOwnerId: "@((Model as ProductSwap).UserId)",
+                ProductId: @((Model as ProductSwap).Id),
+                productType:"swap"
+        </text>
+    }
+    else if (Model is StoreProduct)
+    {
+        <text>
+                code2: "@((Model as StoreProduct).Code)",
+                productOwnerId: "@((Model as StoreProduct).Store?.UserId)",
+                ProductId: @((Model as StoreProduct).Id),
+                productType:"store"
+        </text>
+    }
             },
             success: function (response) {
                 if (response.exists) {

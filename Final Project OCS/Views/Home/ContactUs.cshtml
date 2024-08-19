@@ -1,0 +1,112 @@
+﻿@model ContactUs
+
+@{
+    ViewData["Title"] = "ContactUs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section_gap">
+    <div class="container">
+       
+
+
+        <div class="row">
+            <div class="col-12">
+                <h2 class="contact-title">Get in Touch</h2>
+            </div>
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <form class="form-contact contact_form" id="contactForm">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea asp-for="Body" class="form-control w-100"  cols="30" rows="9" placeholder="Enter Message" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input asp-for="Name" class="form-control" placeholder="Enter your name" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input class="form-control" asp-for="Email" type="email" placeholder="Enter email address" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" asp-for="Subject" type="text" placeholder="Enter Subject" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-lg-3">
+                        <button type="submit" class="main_btn">Send Message</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="ti-home"></i></span>
+                    <div class="media-body">
+                        <h3>Buttonwood, California.</h3>
+                        <p>Rosemead, CA 91770</p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+                    <div class="media-body">
+                        <h3><a href="tel:454545654">00 (440) 9865 562</a></h3>
+                        <p>Mon to Fri 9am to 6pm</p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="ti-email"></i></span>
+                    <div class="media-body">
+                        <h3><a href="mailto:support@colorlib.com">support@colorlib.com</a></h3>
+                        <p>Send us your query anytime!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#contactForm').on('submit', function (e) {
+                e.preventDefault(); 
+
+                
+                var formData = $(this).serialize();
+
+                
+                $.ajax({
+                    url: '@Url.Action("CreateContactUs", "Home")', 
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Your message has been sent successfully!'
+                        }).then(function () {
+                            $('#contactForm')[0].reset();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing your request.'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
