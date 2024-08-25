@@ -34,8 +34,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Code)
             </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
+            </th>
+            <th>
+
             </th>
             <th></th>
         </tr>
@@ -67,6 +71,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)
             </td>
+                <td>
+                    <button class="btn btn-primary" onclick="showImageModal(@item.Id)">Manage Images</button>
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
@@ -76,3 +83,37 @@
 }
     </tbody>
 </table>
+
+<div id="imageModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Manage Images</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="imageModalBody">
+                <!-- Images will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteAllImages()">Delete All Images</button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    var getImagesUrl = '@Url.Action("GetImagesForProduct", "Base")';
+    var createImagesUrl = '@Url.Action("CreateImages", "Base")';
+    var IsStoreProduct = false;
+</script>
+    <script src="~/js/ImageFunctionality.js"> </script>
+
+   
+}

@@ -34,4 +34,8 @@
     <None Include="wwwroot\Home\img\product\.DS_Store" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\products\" />
+  </ItemGroup>
+
 </Project>

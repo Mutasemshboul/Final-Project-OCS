@@ -200,6 +200,7 @@ namespace Final_Project_OCS.Controllers
                 }
 
                 product.Status = "Sold";
+                product.SoldDate = DateTime.Now;
             }
             else if (productType == "swap")
             {
@@ -218,6 +219,7 @@ namespace Final_Project_OCS.Controllers
                 }
 
                 product.Status = "Sold";
+                product.SwapDate = DateTime.Now;
             }
             else if (productType == "store")
             {

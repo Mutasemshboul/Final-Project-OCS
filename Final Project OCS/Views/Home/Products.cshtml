@@ -135,7 +135,6 @@
 @section Scripts{
     <script>
         function loadProducts(categoryId,isSwap) {
-            console.log(isSwap)
             $.ajax({
                 url: '@Url.Action("GetProductPartialView", "Home")',
                 type: 'GET',

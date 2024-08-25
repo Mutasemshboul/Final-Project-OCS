@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form  id="createProductSwapForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="SwapDate" class="control-label"></label>
@@ -59,4 +59,52 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#createProductSwapForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
 
+                // Gather form data
+                var formData = $(this).serialize();
+
+                // AJAX request
+                $.ajax({
+                    url: '@Url.Action("Create", "ProductSwaps")', // Replace with your controller's name
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message
+                            }).then(function () {
+                                window.location.href = '@Url.Action("Index", "ProductSwaps")'; // Redirect after success
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            }).then(function () {
+                                window.location.href = '@Url.Action("Subscriptions", "Home")'; // Redirect after success
+                            });;
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing your request.'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
+}

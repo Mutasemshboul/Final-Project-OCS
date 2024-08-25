@@ -13,6 +13,7 @@ namespace Final_Project_OCS.Models
         public ApplicationUser? User { get; set; }
 
         public string ImageUrl { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
         // Navigation property to represent the one-to-many relationship
         public ICollection<StoreCategory> StoreCategories { get; set; } = new List<StoreCategory>();

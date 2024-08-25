@@ -24,6 +24,7 @@ namespace Final_Project_OCS.Data
         public DbSet<StoreCategory> StoreCategories { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
         public DbSet<ContactUs>  ContactUs { get; set; }
+        public DbSet<StoreProductImage> StoreProductImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,13 +37,13 @@ namespace Final_Project_OCS.Data
                .HasOne(cm => cm.Sender)
                .WithMany()
                .HasForeignKey(cm => cm.SenderId)
-               .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
+               .OnDelete(DeleteBehavior.NoAction); 
 
             modelBuilder.Entity<ChatMessage>()
                 .HasOne(cm => cm.Receiver)
                 .WithMany()
                 .HasForeignKey(cm => cm.ReceiverId)
-                .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
+                .OnDelete(DeleteBehavior.NoAction); 
         }
     }
 }

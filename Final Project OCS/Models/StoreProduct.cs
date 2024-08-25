@@ -22,6 +22,8 @@ namespace Final_Project_OCS.Models
         public decimal Price { get; set; }
         public string Status { get; set; } = "available"; // 'available', 'pending', 'sold'
         public bool IsDeleted { get; set; } = false;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime SoldDate { get; set; }
         public string Code { get; set; } = GenerateCode();
 
         private static string GenerateCode()
