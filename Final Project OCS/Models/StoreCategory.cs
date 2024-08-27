@@ -12,5 +12,6 @@ namespace Final_Project_OCS.Models
         [ForeignKey("StoreId")]
 
         public Store? Store { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

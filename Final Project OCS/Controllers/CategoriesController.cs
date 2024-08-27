@@ -25,7 +25,7 @@ namespace Final_Project_OCS.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Categories.Where(c=>!c.IsDeleted).ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -145,7 +145,8 @@ namespace Final_Project_OCS.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categories.Remove(category);
+                category.IsDeleted = true;
+                //_context.Categories.Remove(category);
             }
 
             await _context.SaveChangesAsync();

@@ -41,7 +41,7 @@ namespace Final_Project_OCS.Controllers
             var storeProducts = _context.StoreProducts
                                         .Include(s => s.Category)
                                         .Include(s => s.Store)
-                                        .Where(s => s.StoreId == userStore.Id);
+                                        .Where(s => s.StoreId == userStore.Id && !s.IsDeleted && !s.Category.IsDeleted);
 
             return View(await storeProducts.ToListAsync());
         }

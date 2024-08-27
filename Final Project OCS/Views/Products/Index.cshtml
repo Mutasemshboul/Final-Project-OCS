@@ -35,9 +35,9 @@
                 @Html.DisplayNameFor(model => model.Code)
             </th>
             
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
+            </th> *@
             <th>
 
             </th>
@@ -68,9 +68,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Code)
                 </td>
-            <td>
+            @* <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
+            </td> *@
                 <td>
                     <button class="btn btn-primary" onclick="showImageModal(@item.Id)">Manage Images</button>
                 </td>

@@ -13,9 +13,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SwapDate)
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
@@ -34,9 +32,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Code)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
+          
             <th></th>
             <th></th>
         </tr>
@@ -44,9 +40,7 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SwapDate)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.User.Email)
             </td>
@@ -65,9 +59,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Code)
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
+           
                 <td>
                     <button class="btn btn-primary" onclick="showImageModal(@item.Id)">Manage Images</button>
                 </td>

@@ -2,19 +2,85 @@
 @model ExternalLoginModel
 @{
     ViewData["Title"] = "Register";
+    Layout = null;
 }
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
-<h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
-<hr />
+<link rel="stylesheet" href="~/LoginAndRegister/fonts/icomoon/style.css">
 
-<p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</p>
+<link rel="stylesheet" href="~/LoginAndRegister/css/owl.carousel.min.css">
 
-<div class="row">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="~/LoginAndRegister/css/bootstrap.min.css">
+
+<!-- Style -->
+<link rel="stylesheet" href="~/LoginAndRegister/css/style.css">
+
+
+
+
+
+<div class="content">
+
+
+
+    <div class="container">
+        <h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
+        <hr />
+
+        <p id="external-login-description" class="text-info">
+            You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+            Please enter an email address for this site below and click the Register button to finish
+            logging in.
+        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <img src="~/LoginAndRegister/images/undraw_remotely_2j6y.svg" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6 contents">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="mb-4">
+                            
+                        </div>
+                        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                            <div class="form-group first mb-4">
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                <input type="text" asp-for="Input.Email" class="form-control">
+
+
+
+                            </div>
+
+
+                            <input  type="submit" value="Register" class="btn btn-block btn-primary">
+
+
+                        </form>
+                       
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+@* <div class="row">
     <div class="col-md-4">
         <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -26,8 +92,11 @@
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
-</div>
-
+</div> *@
+<script src="~/LoginAndRegister/js/jquery-3.3.1.min.js"></script>
+<script src="~/LoginAndRegister/js/popper.min.js"></script>
+<script src="~/LoginAndRegister/js/bootstrap.min.js"></script>
+<script src="~/LoginAndRegister/js/main.js"></script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

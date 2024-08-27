@@ -20,7 +20,7 @@ namespace Final_Project_OCS.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-        public string Status { get; set; } = "available"; // 'available', 'pending', 'sold'
+        public string Status { get; set; } = "Active";
         public bool IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime SoldDate { get; set; }

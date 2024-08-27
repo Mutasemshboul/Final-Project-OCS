@@ -32,6 +32,10 @@
     <None Include="wwwroot\Home\img\.DS_Store" />
     <None Include="wwwroot\Home\img\blog\.DS_Store" />
     <None Include="wwwroot\Home\img\product\.DS_Store" />
+    <None Include="wwwroot\LoginAndRegister\css\.DS_Store" />
+    <None Include="wwwroot\LoginAndRegister\fonts\.DS_Store" />
+    <None Include="wwwroot\LoginAndRegister\images\.DS_Store" />
+    <None Include="wwwroot\LoginAndRegister\scss\.DS_Store" />
   </ItemGroup>
 
   <ItemGroup>

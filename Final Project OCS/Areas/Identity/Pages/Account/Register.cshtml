@@ -2,11 +2,102 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
 
-<div class="row">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="~/LoginAndRegister/fonts/icomoon/style.css">
+
+<link rel="stylesheet" href="~/LoginAndRegister/css/owl.carousel.min.css">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="~/LoginAndRegister/css/bootstrap.min.css">
+
+<!-- Style -->
+<link rel="stylesheet" href="~/LoginAndRegister/css/style.css">
+
+
+
+
+
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="~/LoginAndRegister/images/undraw_remotely_2j6y.svg" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6 contents">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="mb-4">
+                            <h3>Register</h3>
+                            <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                        </div>
+                        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                            <div class="form-group first mb-4">
+                                <label asp-for="Input.Email"></label>
+                                <input type="text" asp-for="Input.Email" class="form-control" id="username">
+
+
+
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                            <div class="form-group last mb-4">
+                                <label asp-for="Input.Password"></label>
+                                <input type="password" asp-for="Input.Password" class="form-control" id="password">
+
+                            </div>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+
+                            <div class="form-group last mb-4">
+                                <label asp-for="Input.ConfirmPassword"></label>
+                                <input type="password" asp-for="Input.ConfirmPassword" class="form-control" id="password">
+
+                            </div>
+
+                 
+
+                            <input id="login-submit" type="submit" value="Log In" class="btn btn-block btn-primary">
+
+                            <span class="d-block text-left my-4 text-muted">&mdash; or login with &mdash;</span>
+
+
+                        </form>
+                        <div class="social-login">
+
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                <div>
+                                    <p>
+                                        @foreach (var provider in Model.ExternalLogins!)
+                                        {
+                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                        }
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Create a new account.</h2>
@@ -60,7 +151,12 @@
             }
         </section>
     </div>
-</div>
+</div> *@
+
+<script src="~/LoginAndRegister/js/jquery-3.3.1.min.js"></script>
+<script src="~/LoginAndRegister/js/popper.min.js"></script>
+<script src="~/LoginAndRegister/js/bootstrap.min.js"></script>
+<script src="~/LoginAndRegister/js/main.js"></script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

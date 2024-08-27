@@ -33,14 +33,15 @@ namespace Final_Project_OCS.Controllers
             {
                 applicationDbContext = _context.Products
                     .Include(p => p.Category)
-                    .Include(p => p.User);
+                    .Include(p => p.User)
+                    .Where(p=>!p.IsDeleted && !p.Category.IsDeleted);
             }
             else
             {
                 applicationDbContext = _context.Products
                     .Include(p => p.Category)
                     .Include(p => p.User)
-                    .Where(u => u.UserId == userId);
+                    .Where(u => u.UserId == userId && !u.IsDeleted && !u.Category.IsDeleted);
             }
             return View(await applicationDbContext.ToListAsync());
         }
@@ -68,7 +69,7 @@ namespace Final_Project_OCS.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.Where(c => !c.IsDeleted), "Id", "CategoryName");
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName");
             return View();
         }
@@ -213,7 +214,8 @@ namespace Final_Project_OCS.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
+                product.IsDeleted = true;
+                //_context.Products.Remove(product);
             }
 
             await _context.SaveChangesAsync();

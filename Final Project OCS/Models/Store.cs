@@ -12,8 +12,10 @@ namespace Final_Project_OCS.Models
         [ForeignKey("UserId")]
         public ApplicationUser? User { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; set; } = false;
+
 
         // Navigation property to represent the one-to-many relationship
         public ICollection<StoreCategory> StoreCategories { get; set; } = new List<StoreCategory>();

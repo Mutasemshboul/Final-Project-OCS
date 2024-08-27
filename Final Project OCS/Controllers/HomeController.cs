@@ -25,10 +25,45 @@ namespace Final_Project_OCS.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Products = _context.Products.Include(p => p.Category).Include(p => p.User).Where(p=>p.Status=="Active");
-            ViewBag.ProductsSwap = _context.ProductSwaps.Include(p => p.Category).Include(p => p.User).Where(p => p.Status == "Active");
+            var products = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.User)
+                .Where(p => p.Status == "Active" && !p.IsDeleted && !p.Category.IsDeleted && !p.User.IsDeleted)
+                .ToList();
+
+            var productSwaps = _context.ProductSwaps
+                .Include(p => p.Category)
+                .Include(p => p.User)
+                .Where(p => p.Status == "Active" && !p.IsDeleted && !p.Category.IsDeleted && !p.User.IsDeleted)
+                .ToList();
+
+            var productsWithImages = products.Select(p => new
+            {
+                Product = p,
+                FirstImageUrl = _context.ImageItems
+                    .Where(pi => pi.ItemId == p.Id)
+                    .OrderBy(pi => pi.Id) 
+                    .Select(pi => pi.ImageUrl)
+                    .FirstOrDefault()
+            }).ToList();
+
+            var productSwapsWithImages = productSwaps.Select(ps => new
+            {
+                ProductSwap = ps,
+                FirstImageUrl = _context.ImageItems
+                    .Where(psi => psi.ItemId == ps.Id)
+                    .OrderBy(psi => psi.Id) 
+                    .Select(psi => psi.ImageUrl)
+                    .FirstOrDefault()
+            }).ToList();
+
+            ViewBag.Products = productsWithImages;
+            ViewBag.ProductSwaps = productSwapsWithImages;
+
             return View();
         }
+
+
 
         [Authorize(Roles = SD.SD.Role_Customer)]
         public IActionResult Privacy()
@@ -55,13 +90,25 @@ namespace Final_Project_OCS.Controllers
             if (isProductStore)
             {
                 var product = await _context.StoreProducts
+                    .Include(c=>c.Category)
                    .Include(p => p.Store)
                    .FirstOrDefaultAsync(m => m.Id == id);
                 if (product == null)
                 {
                     return NotFound();
                 }
-
+                var productImages = _context.StoreProductImages
+                                 .Where(sp => sp.ItemId == id)
+                                 .ToList();
+                ViewBag.ProductsImages = productImages;
+                if (productImages.Any())
+                {
+                    ViewBag.FirstImage = productImages.First().ImageUrl;
+                }
+                else
+                {
+                    ViewBag.FirstImage = "path-to-default-image"; 
+                }
                 return View("Details", product);
             }
             if (isSwap)
@@ -74,7 +121,18 @@ namespace Final_Project_OCS.Controllers
                 {
                     return NotFound();
                 }
-
+                var productImages = _context.ImageItems
+                    .Where(sp => sp.ItemId == id)
+                    .ToList();
+                ViewBag.ProductsImages = productImages;
+                if (productImages.Any())
+                {
+                    ViewBag.FirstImage = productImages.First().ImageUrl;
+                }
+                else
+                {
+                    ViewBag.FirstImage = "path-to-default-image";
+                }
                 return View("Details", productSwap);
             }
             else
@@ -87,7 +145,18 @@ namespace Final_Project_OCS.Controllers
                 {
                     return NotFound();
                 }
-
+                var productImages = _context.ImageItems
+                    .Where(sp => sp.ItemId == id)
+                    .ToList();
+                ViewBag.ProductsImages = productImages;
+                if (productImages.Any())
+                {
+                    ViewBag.FirstImage = productImages.First().ImageUrl;
+                }
+                else
+                {
+                    ViewBag.FirstImage = "path-to-default-image";
+                }
                 return View("Details", product);
             }
         }
@@ -240,6 +309,7 @@ namespace Final_Project_OCS.Controllers
                 }
 
                 product.Status = "Sold";
+                product.SoldDate = DateTime.Now;
             }
             
 
@@ -252,7 +322,7 @@ namespace Final_Project_OCS.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewBag.HasStore = _context.Stores.Any(s => s.UserId == userId);
-            return View(await _context.SubscriptionTypes.ToListAsync());
+            return View(await _context.SubscriptionTypes.Where(su=>!su.IsDeleted).ToListAsync());
         }
         [HttpPost]
         [Authorize]
@@ -290,48 +360,92 @@ namespace Final_Project_OCS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> RegisterStore(Store store)
         {
             if (ModelState.IsValid)
             {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString()+ Path.GetFileName(file.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/stores", fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        store.ImageUrl = "/images/stores/" + fileName;
+                    }
+                }
+
                 store.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = _context.ApplicationUsers
-                .FirstOrDefault(u => u.Id == store.UserId && !u.IsDeleted);
-                user.HasStore = true;
-                _context.ApplicationUsers.Update(user);
-                _context.Stores.Add(store);
-                await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "Store registered successfully." });
+                    .FirstOrDefault(u => u.Id == store.UserId && !u.IsDeleted);
+                if (user != null)
+                {
+                    user.HasStore = true;
+                    _context.ApplicationUsers.Update(user);
+                    _context.Stores.Add(store);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true, message = "Store registered successfully." });
+                }
             }
 
             return Json(new { success = false, message = "There was an error registering the store. Please try again." });
         }
-       
-        public IActionResult Products( bool isSwap)
+
+
+        public IActionResult Products(bool isSwap)
         {
-            ViewBag.Categories = _context.Categories.ToList();
+            // Load categories for the ViewBag
+            ViewBag.Categories = _context.Categories.Where(c => !c.IsDeleted).ToList();
             ViewBag.IsSwap = isSwap;
 
             if (isSwap)
             {
                 var products = _context.ProductSwaps
                     .Include(p => p.Category)
-                    .Where(p=>p.Status == "Active")
-                    .ToList();
+                    .Include(u => u.User)
+                    .Where(p => p.Status == "Active" && !p.IsDeleted && !p.User.IsDeleted && !p.Category.IsDeleted)
+                    .Select(ps => new
+                    {
+                        Type = "ProductSwap",
+                        ProductSwap = ps,
+                        FirstImageUrl = _context.ImageItems
+                            .Where(psi => psi.ItemId == ps.Id)
+                            .OrderBy(psi => psi.Id)
+                            .Select(psi => psi.ImageUrl)
+                            .FirstOrDefault()
+                    })
+                    .ToList<dynamic>(); 
+
                 return View(products);
             }
             else
             {
                 var products = _context.Products
                     .Include(p => p.Category)
-                    .Where(p => p.Status == "Active")
-                    .ToList();
+                    .Where(p => p.Status == "Active" && !p.IsDeleted && !p.User.IsDeleted && !p.Category.IsDeleted)
+                    .Select(p => new
+                    {
+                        Type = "Product",
+                        Product = p,
+                        FirstImageUrl = _context.ImageItems
+                            .Where(pi => pi.ItemId == p.Id)
+                            .OrderBy(pi => pi.Id)
+                            .Select(pi => pi.ImageUrl)
+                            .FirstOrDefault()
+                    })
+                    .ToList<dynamic>(); 
+
                 return View(products);
             }
-  
-            
-            
         }
+
 
         public IActionResult GetProductPartialView(int categoryId, bool isSwap)
         {
@@ -340,25 +454,48 @@ namespace Final_Project_OCS.Controllers
             if (isSwap)
             {
                 var products = _context.ProductSwaps
-                           .Include(p => p.Category)
-                           .Where(p => p.CategoryId == categoryId && p.Status == "Active")
-                           .ToList();
+                    .Include(p => p.Category)
+                    .Include(u => u.User)
+                    .Where(p => p.Status == "Active" && !p.IsDeleted && !p.User.IsDeleted && !p.Category.IsDeleted && p.CategoryId == categoryId)
+                    .Select(ps => new
+                    {
+                        Type ="ProductSwap" ,
+                        ProductSwap = ps,
+                        FirstImageUrl = _context.ImageItems
+                            .Where(psi => psi.ItemId == ps.Id)
+                            .OrderBy(psi => psi.Id)
+                            .Select(psi => psi.ImageUrl)
+                            .FirstOrDefault()
+                    })
+                    .ToList<dynamic>(); 
+
                 return PartialView("_ProductPartial", products);
             }
             else
             {
                 var products = _context.Products
-                           .Include(p => p.Category)
-                           .Where(p => p.CategoryId == categoryId && p.Status == "Active")
-                           .ToList();
+                    .Include(p => p.Category)
+                    .Where(p => p.Status == "Active" && !p.IsDeleted && !p.User.IsDeleted && !p.Category.IsDeleted && p.CategoryId == categoryId)
+                    .Select(p => new
+                    {
+                        Type = "Product",
+                        Product = p,
+                        FirstImageUrl = _context.ImageItems
+                            .Where(pi => pi.ItemId == p.Id)
+                            .OrderBy(pi => pi.Id)
+                            .Select(pi => pi.ImageUrl)
+                            .FirstOrDefault()
+                    })
+                    .ToList<dynamic>(); 
+
                 return PartialView("_ProductPartial", products);
             }
-  
+
         }
 
         public async Task<IActionResult> Stores()
         {
-            return View(await _context.Stores.ToListAsync());
+            return View(await _context.Stores.Where(s=>!s.IsDeleted).ToListAsync());
         }
 
         public IActionResult ContactUs()
@@ -379,7 +516,6 @@ namespace Final_Project_OCS.Controllers
 
         public async Task<IActionResult> GetProductStore(int storeId)
         {
-            
             var store = await _context.Stores.FindAsync(storeId);
             if (store == null)
             {
@@ -387,18 +523,28 @@ namespace Final_Project_OCS.Controllers
             }
 
             var products = await _context.StoreProducts
-                .Where(p => p.StoreId == storeId && p.Status=="Active")
-                .Include(p => p.Category) 
+                .Include(p => p.Category)
+                .Include(p => p.Category.Store.User)
+                .Where(p => p.Status == "Active" && !p.IsDeleted && !p.Category.Store.User.IsDeleted && !p.Category.IsDeleted && p.StoreId == storeId)
+                .Select(p => new
+                {
+                    Product = p,
+                    FirstImageUrl = _context.StoreProductImages
+                        .Where(pi => pi.ItemId == p.Id)
+                        .OrderBy(pi => pi.Id) // Or use CreatedDate if available
+                        .Select(pi => pi.ImageUrl)
+                        .FirstOrDefault()
+                })
                 .ToListAsync();
-            var categories = products.Select(p => p.Category).Distinct().ToList();
 
-           
+            var categories = products.Select(p => p.Product.Category).Distinct().ToList();
+
             ViewBag.Categories = categories;
-
+            ViewBag.Products = products;
 
             return View(products);
-      
         }
+
 
 
 

@@ -1,0 +1,349 @@
+﻿@model CustomerDashboardViewModel
+
+@{
+    ViewData["Title"] = "CustomerDashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<!-- ============================================================== -->
+<!-- pageheader -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- end pageheader -->
+<!-- ============================================================== -->
+<div class="row">
+    <!-- ============================================================== -->
+    <!-- four widgets   -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- total views   -->
+    <!-- ============================================================== -->
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-inline-block">
+                    <h5 class="text-muted">Total Categoires</h5>
+                    <h2 class="mb-0"> @Model.NumberOfStoreCategories</h2>
+                </div>
+                <div class="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
+                    <i class="fa fa-eye fa-fw fa-sm text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end total views   -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- total followers   -->
+    <!-- ============================================================== -->
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-inline-block">
+                    <h5 class="text-muted">Total Store Products</h5>
+                    <h2 class="mb-0"> @Model.NumberOfStoreProducts</h2>
+                </div>
+                <div class="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
+                    <i class="fa fa-user fa-fw fa-sm text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end total followers   -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- partnerships   -->
+    <!-- ============================================================== -->
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-inline-block">
+                    <h5 class="text-muted">Total Products</h5>
+                    <h2 class="mb-0">@Model.NumberOfProducts</h2>
+                </div>
+                <div class="float-right icon-circle-medium  icon-box-lg  bg-secondary-light mt-1">
+                    <i class="fa fa-handshake fa-fw fa-sm text-secondary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end partnerships   -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- total earned   -->
+    <!-- ============================================================== -->
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-inline-block">
+                    <h5 class="text-muted">Total Products Swap</h5>
+                    <h2 class="mb-0">@Model.NumberOfSwapProduct </h2>
+                </div>
+                <div class="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
+                    <i class="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end total earned   -->
+    <!-- ============================================================== -->
+</div>
+
+
+
+
+<div class="row">
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- recent orders  -->
+    <!-- ============================================================== -->
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <h5 class="card-header">Recent Products</h5>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr class="border-0">
+                                <th class="border-0">Name</th>
+                                <th class="border-0">Price</th>
+                                <th class="border-0">Description</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in @Model.RecentProducts)
+                            {
+                                <tr>
+                                    <td>@product.Title</td>
+                                    <td>@product.Price </td>
+
+                                    <td>@product.Description </td>
+
+                                </tr>
+                            }
+
+
+                            <tr>
+                                <td colspan="9"><a href="#" class="btn btn-outline-light float-right">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <h5 class="card-header">Recent Swap Product</h5>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr class="border-0">
+                                <th class="border-0">Name</th>
+                                <th class="border-0">Description</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var swapProduct in Model.RecentSwapProducts)
+                            {
+                                <tr>
+                                    <td>@swapProduct.Title</td>
+                                    <td>@swapProduct.Description</td>
+                                </tr>
+                            }
+
+
+                            <tr>
+                                <td colspan="9"><a href="#" class="btn btn-outline-light float-right">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- end recent orders  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- customer acquistion  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- end customer acquistion  -->
+    <!-- ============================================================== -->
+</div>
+<div class="row">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Active and sold Product Percentage</h5>
+                <canvas id="soldProductsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Category Distribution</h5>
+                <canvas id="categoryDistributionChart"></canvas>
+
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Monthly Revenue</h5>
+                <canvas id="monthlyRevenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Store Growth</h5>
+                <canvas id="storeGrowthChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Monthly Sold Product</h5>
+                <canvas id="monthlySoldProductsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sold Products Percentage Chart
+        var ctx = document.getElementById('soldProductsChart').getContext('2d');
+        var soldProductsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Sold Products', 'Available Products'],
+                datasets: [{
+                    data: [@Model.SoldProductsPercentage, 100 - @Model.SoldProductsPercentage],
+                    backgroundColor: ['#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Monthly Sold Products Chart
+        var ctx = document.getElementById('monthlySoldProductsChart').getContext('2d');
+        var monthlySoldProductsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // months labels
+                datasets: [{
+                    label: 'Sold Products',
+                    data: @Html.Raw(Json.Serialize(Model.MonthlySoldProducts)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Monthly Revenue Chart
+        var ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+        var monthlyRevenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // months labels
+                datasets: [{
+                    label: 'Revenue',
+                    data: @Html.Raw(Json.Serialize(Model.MonthlyRevenue)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Store Growth Chart
+        var ctx = document.getElementById('storeGrowthChart').getContext('2d');
+        var storeGrowthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // months labels
+                datasets: [{
+                    label: 'Store Growth',
+                    data: @Html.Raw(Json.Serialize(Model.StoreGrowth)),
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Category Distribution Chart
+        var ctx = document.getElementById('categoryDistributionChart').getContext('2d');
+        var categoryDistributionChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.CategoryDistribution.Keys)),
+                datasets: [{
+                    label: 'Category Distribution',
+                    data: @Html.Raw(Json.Serialize(Model.CategoryDistribution.Values)),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+    </script>
+
+}

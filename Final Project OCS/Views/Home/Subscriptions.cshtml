@@ -85,7 +85,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="storeRegistrationForm">
+                        <form id="storeRegistrationForm" enctype="multipart/form-data">
                             @Html.AntiForgeryToken() <!-- Include Anti-Forgery Token -->
                             <div class="form-group">
                                 <label for="storeName">Store Name</label>
@@ -96,11 +96,12 @@
                                 <textarea class="form-control" id="storeDescription" name="Description" rows="3" placeholder="Enter store description" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="storeImage">Image URL</label>
-                                <input type="text" class="form-control" id="storeImage" name="ImageUrl" placeholder="Enter image URL" required>
+                                <label for="storeImage">Image</label>
+                                <input type="file" class="form-control-file" id="storeImage" name="Image" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Register Store</button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -149,45 +150,46 @@
     }
 
 
-    $(document).ready(function () {
-        $('#storeRegistrationForm').on('submit', function (e) {
-            e.preventDefault(); 
+        $(document).ready(function () {
+            $('#storeRegistrationForm').on('submit', function (e) {
+                e.preventDefault();
 
-            
-            var formData = $(this).serialize();
+                var formData = new FormData(this); // Use FormData to handle file uploads
 
-            
-            $.ajax({
-                url: '@Url.Action("RegisterStore", "Home")', 
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message
-                        }).then(function () {
-                            $('#storeRegistrationModal').modal('hide'); 
-                        });
-                    } else {
+                $.ajax({
+                    url: '@Url.Action("RegisterStore", "Home")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message
+                            }).then(function () {
+                                $('#storeRegistrationModal').modal('hide');
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: response.message
+                            text: 'An error occurred while processing your request.'
                         });
                     }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'An error occurred while processing your request.'
-                    });
-                }
+                });
             });
         });
-    });
+
 
 
 </script>

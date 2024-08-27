@@ -67,7 +67,7 @@ namespace Final_Project_OCS.Controllers
         // GET: ProductSwaps/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.Where(c=>!c.IsDeleted), "Id", "CategoryName");
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName");
             return View();
         }

@@ -13,11 +13,11 @@
     <div class="col-md-4">
         <form  id="createProductSwapForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="SwapDate" class="control-label"></label>
                 <input asp-for="SwapDate" class="form-control" />
                 <span asp-validation-for="SwapDate" class="text-danger"></span>
-            </div>
+            </div> *@
             @if (User.IsInRole("Admin"))
             {
                 <div class="form-group">
@@ -39,7 +39,7 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <input asp-for="Status" class="form-control" />
                 <span asp-validation-for="Status" class="text-danger"></span>
@@ -48,7 +48,7 @@
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
                 </label>
-            </div>
+            </div> *@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -24,7 +24,7 @@ namespace Final_Project_OCS.Controllers
         // GET: SubscriptionTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SubscriptionTypes.ToListAsync());
+            return View(await _context.SubscriptionTypes.Where(su=>!su.IsDeleted).ToListAsync());
         }
 
         // GET: SubscriptionTypes/Details/5
